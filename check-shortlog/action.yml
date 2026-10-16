@@ -14,6 +14,8 @@ runs:
   steps:
     - name: Get known contributors from contributing file
       shell: bash
+      env:
+        CONTRIBUTING_FILE: ${{ inputs.contributing_file }}
       run: |
         sed \
             -n \
@@ -21,7 +23,7 @@ runs:
             -e 's/ (.*)//' \
             -e 's/^(//' -e 's/)$//' \
             -e '/start-shortlog/,${p;/end-shortlog/q}' \
-            "${{ inputs.contributing_file }}" \
+            "${CONTRIBUTING_FILE}" \
             | head -n -1 \
             | tail -n +2 \
             | sort \

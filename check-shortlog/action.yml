@@ -38,7 +38,7 @@ runs:
         git shortlog -s HEAD \
             | awk '{$1=""; print substr($0,2) }' \
             | sort \
-            | grep -v '\[bot\]' \
+            | grep -vF '[bot]' \
             > shortlog
         echo '::group::Commit authors:'
         git shortlog -se HEAD

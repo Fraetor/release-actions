@@ -1,6 +1,9 @@
 # This is a reusable workflow, rather than an action.
 
-name: Sync PR
+name: Create branch sync PR
+description: |
+  Merge bug fixes from older release branches into newer releases,
+  bubbling them up until they reach master.
 
 on:
   workflow_call:

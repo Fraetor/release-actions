@@ -1,0 +1,63 @@
+# This is a reusable workflow, rather than an action.
+
+name: Check contributor list
+description: |
+  Check the output of git shortlog -s matches the list of contributors in the
+  CONTRIBUTING.md file.
+
+on:
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  check-shortlog:
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # Need to fetch all commits to check contributors.
+          persist-credentials: false
+
+      - name: Get known contributors from contributing file
+        run: |
+          sed \
+              -n \
+              -e 's/ - //' \
+              -e 's/ (.*)//' \
+              -e 's/^(//' -e 's/)$//' \
+              -e '/start-shortlog/,${p;/end-shortlog/q}' \
+              CONTRIBUTING.md \
+              | head -n -1 \
+              | tail -n +2 \
+              | sort \
+              > contributors
+          echo '::group::Contributors from contributing file:'
+          cat contributors
+          echo "::endgroup::"
+
+      - name: List commit authors
+        run: |
+          git shortlog -s HEAD \
+              | awk '{$1=""; print substr($0,2) }' \
+              | sort \
+              | grep -vF '[bot]' \
+              > shortlog
+          echo '::group::Commit authors:'
+          git shortlog -se HEAD
+          echo '::endgroup::'
+
+      - name: See if they differ
+        run: |
+          if ! diff -u shortlog contributors
+          then
+              echo "::error::CONTRIBUTING.md or .mailmap needs updating; \
+              if you have not added yourself to this file please do so. \
+              If you need to register a second email address or change the appearance of your name, \
+              add an entry to the .mailmap file (https://git-scm.com/docs/gitmailmap)."
+              false
+          fi

@@ -1,4 +1,4 @@
-# This is a reusable workflow, rather than an action
+# This is a reusable workflow, rather than an action.
 
 name: Sync PR
 

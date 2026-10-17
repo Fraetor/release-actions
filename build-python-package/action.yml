@@ -1,14 +1,10 @@
 name: Build Python package
-description: Build Python package wheel distribution. Must be run in the (usually top-level) package dir containing setup.py
+description: Build Python package wheel distribution. Must be run in the (usually top-level) package dir containing pyproject.toml
 inputs:
   check-dependencies:
     description: Try pip-installing dependencies to make sure we are pinned to released versions on PyPI
     required: false
     default: true
-  dry-run:
-    description: Obsolete; there is no longer a difference between dry-run and real build
-    required: false
-    default: false
   optional-deps:
     description: Specify optional dependencies to install e.g, `[foo,bar]`.
     default: '[all]'
@@ -18,36 +14,29 @@ runs:
   steps:
     - name: Build
       shell: bash -leo pipefail {0}
+      env:
+        PIP_PROGRESS_BAR: off
       run: |
         python3 --version
-        if [[ -f setup.py ]]; then
-          # old style setup.py project
-          # (must manually install build dependencies)
-          echo "setup.py detected"
-          echo "::group::Installing build dependencies"
-          python3 -m pip install wheel setuptools
-          echo "::endgroup::"
-          python3 setup.py bdist_wheel sdist
-        else
-          # PEP517 project
-          # (must install a builder, this installs build deps for us)
-          echo "PEP 517 project detected"
-          echo "::group::Installing build dependencies"
-          python3 -m pip install build
-          echo "::endgroup::"
-          python3 -m build
-        fi
 
-    - name: Check build
+        echo "::group::Installing build dependencies"
+        python3 -m pip install build twine
+        echo "::endgroup::"
+
+        echo "::group::Building sdist and wheel"
+        python3 -m build
+        echo "::endgroup::"
+
+    - name: Check build artifacts
       shell: bash -leo pipefail {0}
       run: |
-        echo "::group::Installing twine"
-        python3 -m pip install twine
-        echo "::endgroup::"
         twine check dist/*
 
     - name: Check dependencies
       if: inputs.check-dependencies == 'true'
       # ^ string comparison needed due to https://github.com/actions/runner/issues/2238
       shell: bash -leo pipefail {0}
-      run: python3 -m pip install -e .${{ inputs.optional-deps }} --dry-run --ignore-installed
+      env:
+        DEP_GROUP: ${{ inputs.optional-deps }}
+      run: |
+        python3 -m pip install -e ".${DEP_GROUP}" --dry-run --ignore-installed

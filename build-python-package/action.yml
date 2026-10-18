@@ -1,8 +1,11 @@
 name: Build Python package
-description: Build Python package wheel distribution. Must be run in the (usually top-level) package dir containing pyproject.toml
+description: |
+  Build Python package wheel distribution.
+  Must be run in the (usually top-level) package dir containing pyproject.toml.
+
 inputs:
   check-dependencies:
-    description: Try pip-installing dependencies to make sure we are pinned to released versions on PyPI
+    description: Try pip-installing dependencies to make sure we are pinned to released versions on PyPI.
     required: false
     default: true
   optional-deps:

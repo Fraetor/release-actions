@@ -4,7 +4,7 @@ description: |
 
 inputs:
   head_branch:
-    description: Branch from whence to merge from.
+    description: Branch containing changes to create the sync PR from.
     default: ""
     required: false
   status_json_url:

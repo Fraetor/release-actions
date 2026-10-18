@@ -59,8 +59,13 @@ then
     # Try and fast-forward sync branch, else bail until PR is merged.
     if git merge "origin/${HEAD_BRANCH}" --ff-only
     then
-        git push origin "${SYNC_BRANCH}"
-        echo "::notice::Fast-forwarded ${SYNC_BRANCH} to ${HEAD_BRANCH}."
+        if [ "$(git rev-parse --verify HEAD)" = "$(git rev-parse --verify "origin/${SYNC_BRANCH}")" ]
+        then
+            echo "::notice::${SYNC_BRANCH} is up-to-date with ${HEAD_BRANCH}."
+        else
+            git push origin "${SYNC_BRANCH}"
+            echo "::notice::Fast-forwarded ${SYNC_BRANCH} to ${HEAD_BRANCH}."
+        fi
     else
         echo "::warning::Cannot fast-forward ${SYNC_BRANCH} to ${HEAD_BRANCH}; merge existing PR first."
     fi

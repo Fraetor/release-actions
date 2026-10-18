@@ -9,12 +9,15 @@ on:
   workflow_call:
     inputs:
       head_branch:
+        description: Branch containing changes to create the sync PR from.
         type: string
         required: false
+        default: ""
       ignore_branches:
+        description: Regular expression pattern matching branches to skip creating sync PRs from.
         type: string
         required: false
-        default: ''
+        default: ""
 
 concurrency:
   group: sync-${{ inputs.head_branch || github.ref_name }}

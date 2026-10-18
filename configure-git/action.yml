@@ -1,5 +1,6 @@
 name: Configure git
-description: Set github-actions[bot] as author
+description: |
+  Set github-actions[bot] as author and disable various git setup warnings.
 
 runs:
   using: composite

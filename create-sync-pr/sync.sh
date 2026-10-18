@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-if [[ -n "${RUNNER_DEBUG:-}" ]]; then set -x; fi
+if [ -n "${RUNNER_DEBUG:-}" ]; then set -x; fi
 # Create branch sync PR.
 
 # Determine What branch we are running on.
@@ -73,7 +73,7 @@ git switch "${BASE_BRANCH}"
 # Fast-forward if possible, otherwise make a merge commit.
 if git merge "origin/${HEAD_BRANCH}"
 then
-    if [[ "$(git rev-parse --verify HEAD)" == "$(git rev-parse --verify "origin/${BASE_BRANCH}")" ]]
+    if [ "$(git rev-parse --verify HEAD)" = "$(git rev-parse --verify "origin/${BASE_BRANCH}")" ]
     then
         echo "::notice::${BASE_BRANCH} is up-to-date with ${HEAD_BRANCH}."
         exit 0

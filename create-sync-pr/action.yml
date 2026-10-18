@@ -1,4 +1,4 @@
-name: Create branch sync PR
+name: Create sync PR
 description: |
   Create a PR merging fixes from older release branches into newer ones.
 

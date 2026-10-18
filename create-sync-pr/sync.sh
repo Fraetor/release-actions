@@ -96,8 +96,8 @@ else
     git merge --abort
 fi
 
-# If a merge produces a difference, reset and open a pull request.
-# A developer can do the merge on GitHub.
+# If a test merge produces a difference, reset and open a pull request.
+# A developer then does the real merge on GitHub.
 git switch -c "${SYNC_BRANCH}" "origin/${HEAD_BRANCH}"
 git push origin "${SYNC_BRANCH}"
 

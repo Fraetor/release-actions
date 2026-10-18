@@ -21,7 +21,7 @@ runs:
   steps:
     - shell: bash
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
         HEAD_BRANCH: ${{ inputs.head_branch }}
         STATUS_JSON_URL: ${{ inputs.status_json_url }}
         IGNORE_BRANCH_PATTERN: ${{ inputs.ignore_branches }}

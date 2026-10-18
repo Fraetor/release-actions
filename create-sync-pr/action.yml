@@ -1,0 +1,28 @@
+name: Create branch sync PR
+description: |
+  Create a PR merging fixes from older release branches into newer ones.
+
+inputs:
+  head_branch:
+    description: Branch from whence to merge from.
+    default: ""
+    required: false
+  status_json_url:
+    description: URL to a JSON file with branch status information.
+    required: false
+    default: https://raw.githubusercontent.com/cylc/cylc-admin/master/docs/status/branches.json
+  ignore_branches:
+    description: Regular expression pattern of branches that should not be considered for syncing.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        HEAD_BRANCH: ${{ inputs.head_branch }}
+        STATUS_JSON_URL: ${{ inputs.status_json_url }}
+        IGNORE_BRANCH_PATTERN: ${{ inputs.ignore_branches }}
+      run: ${{ github.action_path }}/sync.sh

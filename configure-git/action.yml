@@ -1,5 +1,5 @@
 name: Configure git
-description: Set the bot as author
+description: Set github-actions[bot] as author
 
 runs:
   using: composite

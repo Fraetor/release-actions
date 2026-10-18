@@ -47,8 +47,5 @@ jobs:
       - name: Create sync PR
         uses: $/create-sync-pr
         with:
-          EVENT_NAME: ${{ github.event_name }}
-          REPOSITORY: ${{ github.repository }}
-          HEAD_BRANCH: ${{ inputs.head_branch }}
-          STATUS_JSON: https://raw.githubusercontent.com/cylc/cylc-admin/master/docs/status/branches.json
-          IGNORE_BRANCHES: ${{ inputs.ignore_branches }}
+          head_branch: ${{ inputs.head_branch }}
+          ignore_branches: ${{ inputs.ignore_branches }}
